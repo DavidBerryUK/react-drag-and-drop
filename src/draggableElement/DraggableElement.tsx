@@ -17,6 +17,7 @@ const DraggableElement: React.FC<IProperties> = (props) => {
     const elementIdRef = useRef<string>(uuidv4());
     const mouseIsDownRef = useRef(false);
     const clientRectangleRef = useRef(new DOMRect())
+    const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
     const [modeState, setModeState] = useState(EnumBoxMode.relative);
 
     useLayoutEffect(() => {
@@ -33,16 +34,14 @@ const DraggableElement: React.FC<IProperties> = (props) => {
             var clientRectangle = boxRef.current?.getBoundingClientRect();
             if (clientRectangle !== undefined && clientRectangle !== null) {
                 clientRectangleRef.current = clientRectangle
-                const svc = DraggableService.getInstance();
-                svc.registerDraggableRect(elementIdRef.current, boxRef.current, dragEnded, changeMode);
+                draggableServiceRef.current.registerDraggableRect(elementIdRef.current, boxRef.current, dragEnded, changeMode);
             }
         }
     }, [boxRef]);
 
     const handleOnMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         mouseIsDownRef.current = true;
-        const svc = DraggableService.getInstance();
-        svc.draggingBegin(boxRef.current, elementIdRef.current, event.clientX, event.clientY);
+        draggableServiceRef.current.draggingBegin(elementIdRef.current, event.clientX, event.clientY);
     }
 
     const createBoxStyle = (): {} => {

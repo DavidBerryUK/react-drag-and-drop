@@ -109,12 +109,7 @@ export default class DraggableService {
 
     }
 
-    public draggingBegin(element : HTMLDivElement | null ,id: string, x: number, y: number) {
-        
-        if ( element === null) {
-            console.log("Begining drag - no element passed in");
-            return;
-        }
+    public draggingBegin(id: string, x: number, y: number) {
 
         this.currentSelectedBox = this.draggableBoxes.find(item => item.rectId === id);
 
@@ -127,7 +122,7 @@ export default class DraggableService {
 
         this.startCursorX = x;
         this.startCursorY = y;
-        this.currentlySelectedElement = element;
+        this.currentlySelectedElement = this.currentSelectedBox.element;
         this.draggableBoxes.forEach((box) => {
             if ( id === box.rectId) {
                 box.callbackModeChanged(EnumBoxMode.absoluteDragging);
