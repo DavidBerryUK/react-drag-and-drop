@@ -1,19 +1,21 @@
-import  { callbackDragEndedType, EnumBoxMode } from "./models/DraggableRectInfoModel";
-import  { callbackModeChangedType } from "./models/DraggableRectInfoModel";
-import DraggableRectInfoModel from "./models/DraggableRectInfoModel";
+import  { callbackDragEndedType, EnumBoxMode } from "./models/DraggableElementMetaData";
+import  { callbackModeChangedType } from "./models/DraggableElementMetaData";
+import DraggableElementMetaData from "./models/DraggableElementMetaData";
 
 
 export default class DraggableService {
 
     private static instance: DraggableService;
-    private cursorX : number = 0;
-    private cursorY : number = 0;
+    private startCursorX : number = 0;
+    private startCursorY : number = 0;
     private currentlySelectedElement : HTMLDivElement | undefined;
-    private currentSelectedBox : DraggableRectInfoModel | undefined;
+    private currentSelectedBox : DraggableElementMetaData | undefined;
     
-    draggableBoxes : Array<DraggableRectInfoModel> = new Array<DraggableRectInfoModel>();
+    draggableBoxes : Array<DraggableElementMetaData> = new Array<DraggableElementMetaData>();
 
-    private constructor() { }
+    private constructor() { 
+        
+    }
 
     public static getInstance(): DraggableService {
         if (!DraggableService.instance) {
@@ -23,7 +25,28 @@ export default class DraggableService {
     }
 
     clear() {
-        this.draggableBoxes = new Array<DraggableRectInfoModel>();
+        this.draggableBoxes = new Array<DraggableElementMetaData>();
+    }
+
+    private onMouseMove( e: MouseEvent) : void {
+        console.log(`Draggable Service - mouse move`);
+        this.draggingMove(e.clientX, e.clientY);
+    }
+
+    private onMouseUp( e: MouseEvent) : void {
+        console.log(`Draggable Service - mouse UP`);
+        this.draggingEnd();
+        
+    }
+
+    private beginTracking() {
+        document.addEventListener('mousemove', (e) =>{this.onMouseMove(e)});
+        document.addEventListener('mouseup', (e) =>{this.onMouseUp(e)});
+    }
+
+    private endTracking() {
+        document.removeEventListener('mousemove', (e) =>{this.onMouseMove(e)});
+        document.addEventListener('mouseup', (e) =>{this.onMouseUp(e)});
     }
 
     registerDraggableRect(
@@ -32,7 +55,7 @@ export default class DraggableService {
         callbackDragEnded: callbackDragEndedType,
         callbackModeChanged:callbackModeChangedType) {
 
-        var box = new DraggableRectInfoModel(id,element, callbackDragEnded, callbackModeChanged);
+        var box = new DraggableElementMetaData(id,element, callbackDragEnded, callbackModeChanged);
 
         // box.toConsole();
         this.draggableBoxes.push(box);
@@ -43,27 +66,26 @@ export default class DraggableService {
     }
 
     draggingBegin(element : HTMLDivElement | null ,id: string, x: number, y: number) {
-
+        
         if ( element === null) {
             console.log("Begining drag - no element passed in");
             return;
         }
 
-        this.currentSelectedBox = this.draggableBoxes.find(item => item.id === id);
+        this.currentSelectedBox = this.draggableBoxes.find(item => item.rectId === id);
 
         if ( this.currentSelectedBox === undefined) {
             console.log("Begining drag - can not find id of box passed in");
             return;
         }
 
-        console.log("SELECTED BOX");
-        console.log(this.currentSelectedBox);
+        this.beginTracking();
 
-        this.cursorX = x;
-        this.cursorY = y;
+        this.startCursorX = x;
+        this.startCursorY = y;
         this.currentlySelectedElement = element;
         this.draggableBoxes.forEach((box) => {
-            if ( id === box.id) {
+            if ( id === box.rectId) {
                 box.callbackModeChanged(EnumBoxMode.absoluteDragging);
             } else {
                 box.callbackModeChanged(EnumBoxMode.absolute);
@@ -72,7 +94,8 @@ export default class DraggableService {
     }
 
     draggingEnd() {
-        console.log("dragging ended!");
+
+        this.endTracking();
 
         if ( this.currentSelectedBox !== undefined) {
             this.currentSelectedBox.callbackDragEnded();
@@ -87,8 +110,8 @@ export default class DraggableService {
     }
 
     draggingMove(x: number, y: number) {
-        let deltaX = x - this.cursorX;
-        let deltaY = y - this.cursorY;
+        let deltaX = x - this.startCursorX;
+        let deltaY = y - this.startCursorY;
         if ( this.currentlySelectedElement !== undefined) {
          //   console.log(`moving element translate(${deltaX}px,${deltaY}px)`)
              this.currentlySelectedElement.style.transform = `translate(${deltaX}px,${deltaY}px)`;

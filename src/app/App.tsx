@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import DraggableBox from '../draggableBox/DraggableBox';
+import DraggableElement from '../draggableElement/DraggableElement';
 import DraggableManager from '../draggableManager/DraggableManager';
 
 function App() {
@@ -8,12 +8,12 @@ function App() {
   return (
     <div className="App">
       <DraggableManager>
-        <DraggableBox boxNumber={1} />
-        <DraggableBox boxNumber={2} />
-        <DraggableBox boxNumber={3} />
-        <DraggableBox boxNumber={4} />
-        <DraggableBox boxNumber={5} />
-        <DraggableBox boxNumber={6} />
+        <DraggableElement boxId={1} />
+        <DraggableElement boxId={2} />
+        <DraggableElement boxId={3} />
+        <DraggableElement boxId={4} />
+        <DraggableElement boxId={5} />
+        <DraggableElement boxId={6} />
       </DraggableManager>
     </div>
   );

@@ -7,34 +7,26 @@ export enum EnumBoxMode {
     absoluteDragging
 }
 
-export default class DraggableRectInfoModel {
+export default class DraggableElementMetaData {
 
-    id: string;
+    rectId: string;
     rect: DOMRect | undefined;
     element: HTMLDivElement;
 
     callbackModeChanged: callbackModeChangedType;
     callbackDragEnded: callbackDragEndedType;
 
-
     constructor(
-        id: string,
+        rectId: string,
         element: HTMLDivElement,
         callbackDragEnded: callbackDragEndedType,
         callbackModeChanged: callbackModeChangedType) {
         
         this.callbackModeChanged = callbackModeChanged;
         this.callbackDragEnded = callbackDragEnded;
-        this.id = id;
+        this.rectId = rectId;
         this.element = element;
         this.rect = element.getBoundingClientRect();
     }
 
-    // toConsole() {
-    //     if ( this.rect === undefined) {
-    //         console.log(`id:${this.id} - no rectangle`);
-    //     } else {
-    //         console.log(`id:${this.id}  (${this.rect!.x}x${this.rect!.y})-(${this.rect!.width}x${this.rect!.height})`);
-    //     }
-    // }
 }
