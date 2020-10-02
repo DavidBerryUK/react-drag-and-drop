@@ -1,5 +1,6 @@
-import  { callbackDragEndedType, EnumBoxMode } from "./models/DraggableElementMetaData";
+import  { callbackDragEndedType } from "./models/DraggableElementMetaData";
 import  { callbackModeChangedType } from "./models/DraggableElementMetaData";
+import  { EnumBoxMode } from "./models/DraggableElementMetaData";
 import DraggableElementMetaData from "./models/DraggableElementMetaData";
 
 
@@ -10,6 +11,10 @@ export default class DraggableService {
     private startCursorY : number = 0;
     private currentlySelectedElement : HTMLDivElement | undefined;
     private currentSelectedBox : DraggableElementMetaData | undefined;
+
+    // pointer to mouse events functions so they can be un-registered
+    private eventListenerMouseMove?:  (e: MouseEvent) => void | undefined;      
+    private eventListenerMouseUp?: (e: MouseEvent) => void | undefined;      
     
     draggableBoxes : Array<DraggableElementMetaData> = new Array<DraggableElementMetaData>();
 
@@ -17,6 +22,9 @@ export default class DraggableService {
         
     }
 
+    /**
+     * Singleton
+     */
     public static getInstance(): DraggableService {
         if (!DraggableService.instance) {
             DraggableService.instance = new DraggableService();
@@ -28,28 +36,60 @@ export default class DraggableService {
         this.draggableBoxes = new Array<DraggableElementMetaData>();
     }
 
-    private onMouseMove( e: MouseEvent) : void {
-        console.log(`Draggable Service - mouse move`);
+    /**
+     * Event Handler for mouse move
+     * @param 
+     */
+    private onMouseMoveEventHandler( e: MouseEvent) : void {
         this.draggingMove(e.clientX, e.clientY);
     }
 
-    private onMouseUp( e: MouseEvent) : void {
-        console.log(`Draggable Service - mouse UP`);
-        this.draggingEnd();
-        
+    /**
+     * Event Handler for mouse up
+     * @param e 
+     */
+    private onMouseUpEventHandler( e: MouseEvent) : void {
+        this.draggingEnd();        
     }
 
-    private beginTracking() {
-        document.addEventListener('mousemove', (e) =>{this.onMouseMove(e)});
-        document.addEventListener('mouseup', (e) =>{this.onMouseUp(e)});
+    /**
+     * Begin tracking the mouse when user is dragging an element
+     */
+    private beginTrackingMouse() {
+        if ( this.eventListenerMouseMove === undefined) {
+            this.eventListenerMouseMove = (event:MouseEvent) => { this.onMouseMoveEventHandler(event) };        
+        }
+        if (this.eventListenerMouseUp === undefined ) {
+            this.eventListenerMouseUp = (event: MouseEvent) =>  { this.onMouseUpEventHandler(event) };
+        }
+
+        document.addEventListener('mousemove', this.eventListenerMouseMove);
+        document.addEventListener('mouseup', this.eventListenerMouseUp);
     }
 
-    private endTracking() {
-        document.removeEventListener('mousemove', (e) =>{this.onMouseMove(e)});
-        document.addEventListener('mouseup', (e) =>{this.onMouseUp(e)});
+    /**
+     * Stop tracking the mouse when the user is not dragging an element
+     */
+    private endTrackingMouse() {
+        if (this.eventListenerMouseMove !== undefined) {
+            document.removeEventListener('mousemove', this.eventListenerMouseMove);
+            this.eventListenerMouseMove = undefined;
+        }
+        if (this.eventListenerMouseUp !== undefined) {
+            document.addEventListener('mouseup', this.eventListenerMouseUp);
+            this.eventListenerMouseUp = undefined;
+        }
     }
 
-    registerDraggableRect(
+
+    /**
+     * Register a draggable rectangle
+     * @param id 
+     * @param element 
+     * @param callbackDragEnded 
+     * @param callbackModeChanged 
+     */
+    public registerDraggableRect(
         id: string, 
         element: HTMLDivElement, 
         callbackDragEnded: callbackDragEndedType,
@@ -61,11 +101,15 @@ export default class DraggableService {
         this.draggableBoxes.push(box);
     }
 
-    unRegister(id: string) {
+    /**
+     * un register a draggable rectangle
+     * @param id 
+     */
+    public unRegister(id: string) {
 
     }
 
-    draggingBegin(element : HTMLDivElement | null ,id: string, x: number, y: number) {
+    public draggingBegin(element : HTMLDivElement | null ,id: string, x: number, y: number) {
         
         if ( element === null) {
             console.log("Begining drag - no element passed in");
@@ -79,7 +123,7 @@ export default class DraggableService {
             return;
         }
 
-        this.beginTracking();
+        this.beginTrackingMouse();
 
         this.startCursorX = x;
         this.startCursorY = y;
@@ -93,9 +137,9 @@ export default class DraggableService {
         });
     }
 
-    draggingEnd() {
+    public draggingEnd() {
 
-        this.endTracking();
+        this.endTrackingMouse();
 
         if ( this.currentSelectedBox !== undefined) {
             this.currentSelectedBox.callbackDragEnded();
@@ -109,13 +153,11 @@ export default class DraggableService {
         this.currentSelectedBox = undefined;
     }
 
-    draggingMove(x: number, y: number) {
+    public draggingMove(x: number, y: number) {
         let deltaX = x - this.startCursorX;
         let deltaY = y - this.startCursorY;
         if ( this.currentlySelectedElement !== undefined) {
-         //   console.log(`moving element translate(${deltaX}px,${deltaY}px)`)
              this.currentlySelectedElement.style.transform = `translate(${deltaX}px,${deltaY}px)`;
-            //this.element.style.transform = `translate(102px,101px)`;
         } 
 
     }
