@@ -1,7 +1,9 @@
-import  { callbackDragEndedType } from "./models/DraggableElementMetaData";
-import  { callbackModeChangedType } from "./models/DraggableElementMetaData";
-import  { EnumBoxMode } from "./models/DraggableElementMetaData";
-import DraggableElementMetaData from "./models/DraggableElementMetaData";
+import { callbackDragEndedType }                from "./models/DraggableElementMetaData";
+import { callbackModeChangedType }              from "./models/DraggableElementMetaData";
+import { EnumBoxMode }                          from "./models/DraggableElementMetaData";
+import { ILayoutDelegate }                      from './../layoutServices/interfaces/ILayoutDelegate';
+import DraggableElementMetaData                 from "./models/DraggableElementMetaData";
+import LayoutDelegateNarrative                  from "../layoutServices/LayoutDelegateNarrative";
 
 
 export default class DraggableService {
@@ -10,16 +12,17 @@ export default class DraggableService {
     private startCursorX : number = 0;
     private startCursorY : number = 0;
     private currentlySelectedElement : HTMLDivElement | undefined;
-    private currentSelectedBox : DraggableElementMetaData | undefined;
+    private currentSelectedElement : DraggableElementMetaData | undefined;
 
     // pointer to mouse events functions so they can be un-registered
     private eventListenerMouseMove?:  (e: MouseEvent) => void | undefined;      
     private eventListenerMouseUp?: (e: MouseEvent) => void | undefined;      
-    
+    private layoutDelegate : ILayoutDelegate | undefined;
+
     draggableBoxes : Array<DraggableElementMetaData> = new Array<DraggableElementMetaData>();
 
     private constructor() { 
-        
+        this.layoutDelegate = new LayoutDelegateNarrative();        
     }
 
     /**
@@ -48,7 +51,7 @@ export default class DraggableService {
      * Event Handler for mouse up
      * @param e 
      */
-    private onMouseUpEventHandler( e: MouseEvent) : void {
+    private onMouseUpEventHandler( e: MouseEvent) : void {        
         this.draggingEnd();        
     }
 
@@ -76,9 +79,9 @@ export default class DraggableService {
             this.eventListenerMouseMove = undefined;
         }
         if (this.eventListenerMouseUp !== undefined) {
-            document.addEventListener('mouseup', this.eventListenerMouseUp);
+            document.removeEventListener('mouseup', this.eventListenerMouseUp);
             this.eventListenerMouseUp = undefined;
-        }
+        }        
     }
 
 
@@ -111,9 +114,9 @@ export default class DraggableService {
 
     public draggingBegin(id: string, x: number, y: number) {
 
-        this.currentSelectedBox = this.draggableBoxes.find(item => item.rectId === id);
+        this.currentSelectedElement = this.draggableBoxes.find(item => item.rectId === id);
 
-        if ( this.currentSelectedBox === undefined) {
+        if ( this.currentSelectedElement === undefined) {
             console.log("Begining drag - can not find id of box passed in");
             return;
         }
@@ -122,7 +125,7 @@ export default class DraggableService {
 
         this.startCursorX = x;
         this.startCursorY = y;
-        this.currentlySelectedElement = this.currentSelectedBox.element;
+        this.currentlySelectedElement = this.currentSelectedElement.element;
         this.draggableBoxes.forEach((box) => {
             if ( id === box.rectId) {
                 box.callbackModeChanged(EnumBoxMode.absoluteDragging);
@@ -130,14 +133,18 @@ export default class DraggableService {
                 box.callbackModeChanged(EnumBoxMode.absolute);
             }
         });
+
+        this.layoutDelegate?.sessionBegins(this.currentSelectedElement, this.draggableBoxes)
     }
 
     public draggingEnd() {
 
+        console.log("***************************************** dragging end");
+
         this.endTrackingMouse();
 
-        if ( this.currentSelectedBox !== undefined) {
-            this.currentSelectedBox.callbackDragEnded();
+        if ( this.currentSelectedElement !== undefined) {
+            this.currentSelectedElement.callbackDragEnded();
         }
         this.draggableBoxes.forEach((box) => {
             box.callbackModeChanged(EnumBoxMode.relative);
@@ -145,15 +152,23 @@ export default class DraggableService {
         });
 
         this.currentlySelectedElement = undefined;
-        this.currentSelectedBox = undefined;
+        this.currentSelectedElement = undefined;
+
+        this.layoutDelegate?.sessionEnds();
     }
 
     public draggingMove(x: number, y: number) {
-        let deltaX = x - this.startCursorX;
-        let deltaY = y - this.startCursorY;
-        if ( this.currentlySelectedElement !== undefined) {
-             this.currentlySelectedElement.style.transform = `translate(${deltaX}px,${deltaY}px)`;
+        
+        if ( this.currentlySelectedElement === undefined) {
+             return;
         } 
 
+        let deltaX = x - this.startCursorX;
+        let deltaY = y - this.startCursorY;        
+        
+        this.currentlySelectedElement.style.transform = `translate(${deltaX}px,${deltaY}px)`;
+
+        var rectangle = this.currentSelectedElement!.rect.addCoords(deltaX, deltaY);
+        this.layoutDelegate?.elementMoved(rectangle);
     }
 }

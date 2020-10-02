@@ -1,3 +1,4 @@
+import { Rectangle } from './Rectangle';
 export type callbackModeChangedType = (mode: EnumBoxMode) => void
 export type callbackDragEndedType = () => void
 
@@ -10,7 +11,7 @@ export enum EnumBoxMode {
 export default class DraggableElementMetaData {
 
     rectId: string;
-    rect: DOMRect | undefined;
+    rect: Rectangle;
     element: HTMLDivElement;
 
     callbackModeChanged: callbackModeChangedType;
@@ -26,7 +27,7 @@ export default class DraggableElementMetaData {
         this.callbackDragEnded = callbackDragEnded;
         this.rectId = rectId;
         this.element = element;
-        this.rect = element.getBoundingClientRect();
+        this.rect = Rectangle.fromDomRect(element.getBoundingClientRect());
     }
 
 }

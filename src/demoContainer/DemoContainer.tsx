@@ -1,15 +1,15 @@
 import './Style.css';
 import React  from 'react';
 
-const DraggableManager: React.FC = (props) => {
+const DemoContainer: React.FC = (props) => {
     
     return (
         <>
-            <div className='draggable-manager'>
+            <div className='demo-area'>
                {props.children}
             </div>
         </>
     );
 };
 
-export default DraggableManager;
+export default DemoContainer;
