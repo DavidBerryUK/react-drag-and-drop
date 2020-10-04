@@ -1,11 +1,12 @@
 import { Rectangle } from './../../draggableService/models/Rectangle';
-import DraggableElementMetaData from "../../draggableService/models/DraggableElementMetaData";
+import ElementMetaData from "../../draggableService/models/ElementMetaData";
+import ElementMetaDataCollection from '../../draggableService/models/ElementMetaDataCollection';
 
 export interface ILayoutDelegate {
     /**
      * User has grabbed an element and is starting to drag/drop
      */
-    sessionBegins:(selectedElement: DraggableElementMetaData, elements:Array<DraggableElementMetaData>) => void;
+    sessionBegins:(selectedElement: ElementMetaData, elements:ElementMetaDataCollection) => void;
 
     /**
      * User has dropped the element

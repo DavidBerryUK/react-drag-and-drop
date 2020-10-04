@@ -1,4 +1,4 @@
-import { EnumBoxMode }                          from '../services/draggableService/models/DraggableElementMetaData';
+import { EnumBoxMode }                          from '../services/draggableService/models/ElementMetaData';
 import { MouseEvent }                           from 'react';
 import { useLayoutEffect }                      from 'react';
 import { useRef }                               from 'react';
@@ -6,6 +6,8 @@ import { useState }                             from 'react';
 import { v4 as uuidv4 }                         from 'uuid';
 import DraggableService                         from '../services/draggableService/DraggableService';
 import React                                    from 'react';
+import { motion, useSpring }                               from "framer-motion"
+
 
 interface IProperties {
     boxId: number
@@ -19,6 +21,10 @@ const DraggableElement: React.FC<IProperties> = (props) => {
     const clientRectangleRef = useRef(new DOMRect())
     const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
     const [modeState, setModeState] = useState(EnumBoxMode.relative);
+
+   
+    
+
 
     useLayoutEffect(() => {
 
@@ -71,8 +77,8 @@ const DraggableElement: React.FC<IProperties> = (props) => {
 
     return (
         <>
-            <div ref={boxRef} className={createBoxClass()} style={createBoxStyle()} onMouseDown={handleOnMouseDown}>
-            </div>
+            <motion.div ref={boxRef} className={createBoxClass()} style={createBoxStyle()} onMouseDown={handleOnMouseDown}>
+            </motion.div>
         </>
     );
 };

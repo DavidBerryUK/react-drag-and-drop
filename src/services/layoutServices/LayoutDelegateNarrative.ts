@@ -1,13 +1,14 @@
 import { ILayoutDelegate }                      from './interfaces/ILayoutDelegate';
 import { Rectangle }                            from './../draggableService/models/Rectangle';
-import DraggableElementMetaData                 from '../draggableService/models/DraggableElementMetaData';
+import ElementMetaData                 from '../draggableService/models/ElementMetaData';
+import ElementMetaDataCollection from '../draggableService/models/ElementMetaDataCollection';
 
 export default class LayoutDelegateNarrative implements ILayoutDelegate {
 
-    private elements: Array<DraggableElementMetaData> | undefined;
-    private selectedElement: DraggableElementMetaData | undefined;
+    private elements: ElementMetaDataCollection | undefined;
+    private selectedElement: ElementMetaData | undefined;
 
-    sessionBegins(selectedElement: DraggableElementMetaData, elements: Array<DraggableElementMetaData>) {        
+    sessionBegins(selectedElement: ElementMetaData, elements: ElementMetaDataCollection) {        
         this.elements = elements;
         this.selectedElement = selectedElement;
     }
@@ -23,7 +24,7 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
             return;
         }
 
-        this.elements!.forEach((item) => {            
+        this.elements!.listSorted.forEach((item) => {            
             if ( this.selectedElement!.rect.centerY < item.rect.centerY ) {
                 
             }

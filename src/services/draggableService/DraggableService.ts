@@ -1,9 +1,10 @@
-import { callbackDragEndedType }                from "./models/DraggableElementMetaData";
-import { callbackModeChangedType }              from "./models/DraggableElementMetaData";
-import { EnumBoxMode }                          from "./models/DraggableElementMetaData";
+import { callbackDragEndedType }                from "./models/ElementMetaData";
+import { callbackModeChangedType }              from "./models/ElementMetaData";
+import { EnumBoxMode }                          from "./models/ElementMetaData";
 import { ILayoutDelegate }                      from './../layoutServices/interfaces/ILayoutDelegate';
-import DraggableElementMetaData                 from "./models/DraggableElementMetaData";
+import ElementMetaData                          from "./models/ElementMetaData";
 import LayoutDelegateNarrative                  from "../layoutServices/LayoutDelegateNarrative";
+import ElementMetaDataCollection                from "./models/ElementMetaDataCollection";
 
 
 export default class DraggableService {
@@ -12,14 +13,14 @@ export default class DraggableService {
     private startCursorX : number = 0;
     private startCursorY : number = 0;
     private currentlySelectedElement : HTMLDivElement | undefined;
-    private currentSelectedElement : DraggableElementMetaData | undefined;
+    private currentSelectedElement : ElementMetaData | undefined;
 
     // pointer to mouse events functions so they can be un-registered
     private eventListenerMouseMove?:  (e: MouseEvent) => void | undefined;      
     private eventListenerMouseUp?: (e: MouseEvent) => void | undefined;      
     private layoutDelegate : ILayoutDelegate | undefined;
 
-    draggableBoxes : Array<DraggableElementMetaData> = new Array<DraggableElementMetaData>();
+    private elementList : ElementMetaDataCollection = new ElementMetaDataCollection(); 
 
     private constructor() { 
         this.layoutDelegate = new LayoutDelegateNarrative();        
@@ -36,7 +37,7 @@ export default class DraggableService {
     }
 
     clear() {
-        this.draggableBoxes = new Array<DraggableElementMetaData>();
+        this.elementList.clear();
     }
 
     /**
@@ -98,10 +99,10 @@ export default class DraggableService {
         callbackDragEnded: callbackDragEndedType,
         callbackModeChanged:callbackModeChangedType) {
 
-        var box = new DraggableElementMetaData(id,element, callbackDragEnded, callbackModeChanged);
+        var box = new ElementMetaData(id,element, callbackDragEnded, callbackModeChanged);
 
         // box.toConsole();
-        this.draggableBoxes.push(box);
+        this.elementList.add(box);
     }
 
     /**
@@ -114,7 +115,7 @@ export default class DraggableService {
 
     public draggingBegin(id: string, x: number, y: number) {
 
-        this.currentSelectedElement = this.draggableBoxes.find(item => item.rectId === id);
+        this.currentSelectedElement = this.elementList.findById(id);
 
         if ( this.currentSelectedElement === undefined) {
             console.log("Begining drag - can not find id of box passed in");
@@ -126,7 +127,7 @@ export default class DraggableService {
         this.startCursorX = x;
         this.startCursorY = y;
         this.currentlySelectedElement = this.currentSelectedElement.element;
-        this.draggableBoxes.forEach((box) => {
+        this.elementList.listSorted.forEach((box) => {
             if ( id === box.rectId) {
                 box.callbackModeChanged(EnumBoxMode.absoluteDragging);
             } else {
@@ -134,7 +135,7 @@ export default class DraggableService {
             }
         });
 
-        this.layoutDelegate?.sessionBegins(this.currentSelectedElement, this.draggableBoxes)
+        this.layoutDelegate?.sessionBegins(this.currentSelectedElement, this.elementList)
     }
 
     public draggingEnd() {
@@ -146,7 +147,7 @@ export default class DraggableService {
         if ( this.currentSelectedElement !== undefined) {
             this.currentSelectedElement.callbackDragEnded();
         }
-        this.draggableBoxes.forEach((box) => {
+        this.elementList.listSorted.forEach((box) => {
             box.callbackModeChanged(EnumBoxMode.relative);
             box.element.style.transform = ``;
         });
