@@ -11,9 +11,9 @@ export enum EnumBoxMode {
 export default class ElementMetaData {
 
     rectId: string;
-    currentRect: Rectangle;
+    // currentAbsoluteRect: Rectangle;
+    currentRelativeRect: Rectangle;
     targetRect: Rectangle;
-    // required for dragging
     element: HTMLDivElement;
     xRef: React.MutableRefObject<number>;
     yRef: React.MutableRefObject<number>;
@@ -38,22 +38,8 @@ export default class ElementMetaData {
         this.xRef = xRef;
         this.yRef = yRef;
         this.elevatedRef = elevatedRef;
-       
-       
-       
-        //this.currentRect = Rectangle.fromDomRect(element.getBoundingClientRect());
-       //console.log(boxRef.current.offsetLeft);
-                //console.log(boxRef.current.offsetTop);
-                //console.log(boxRef.current.clientWidth);
-                //console.log(boxRef.current.clientHeight);
-
-                this.currentRect = new Rectangle(element.offsetLeft,element.offsetTop,element.clientWidth,element.clientHeight);
-
-            // console.log(clientRectangle);
-       
-       
-       
-       
-        this.targetRect = this.currentRect;
+        this.currentRelativeRect = new Rectangle(element.offsetLeft,element.offsetTop,element.clientWidth,element.clientHeight);    
+        // this.currentAbsoluteRect = Rectangle.fromDomRect(element.getBoundingClientRect());                 
+        this.targetRect = this.currentRelativeRect;
     }
 }

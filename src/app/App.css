@@ -13,13 +13,12 @@
 
 .mode-fixed {
   position: fixed;
-  border:dotted 2px orange;
   z-index: 1;
+  
 }
 
 .mode-fixed-dragging {
   position: fixed;
-  border:solid 2px red;
   cursor:grabbing;
   z-index: 99;
 }
@@ -27,7 +26,6 @@
 .mode-relative {
   cursor:grab;
   position: relative;
-  border:solid 2px black;
   margin:16px;
 }
 

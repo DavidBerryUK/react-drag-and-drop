@@ -14,7 +14,7 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
         this.elements = elements;
         this.selectedElement = selectedElement;
         if (this.elements.list.length > 0) {
-            this.minY =  this.elements.listSorted[0].currentRect.y
+            this.minY =  this.elements.listSorted[0].currentRelativeRect.y
         } else {
             this.minY = 0
         }

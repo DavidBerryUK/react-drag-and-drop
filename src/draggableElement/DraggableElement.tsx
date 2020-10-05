@@ -18,8 +18,6 @@ const DraggableElement: React.FC<IProperties> = (props) => {
     const boxRef = React.useRef<HTMLDivElement>(null);
     const elementIdRef = useRef<string>(uuidv4());
     const mouseIsDownRef = useRef(false);
-
-    const clientRectangleRef = useRef(new DOMRect())
     const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
     const [modeState, setModeState] = useState(EnumBoxMode.relative);
  
@@ -42,11 +40,7 @@ const DraggableElement: React.FC<IProperties> = (props) => {
         }
 
         if (boxRef.current !== null) {
-            //var clientRectangle = boxRef.current?.getBoundingClientRect();
-            
 
-            
-                // clientRectangleRef.current = clientRectangle
                 draggableServiceRef.current.registerDraggableRect(
                     elementIdRef.current, 
                     boxRef.current, 
@@ -68,15 +62,6 @@ const DraggableElement: React.FC<IProperties> = (props) => {
 
     
 
-    const createBoxStyle = (): {} => {
-        // if (modeState) {   
-        //      return {
-        //            top: clientRectangleRef.current.y,
-        //            left: clientRectangleRef.current.x,
-        //     }
-        // }
-        return {};
-    }
 
     const createBoxClass = () => {
 
@@ -95,7 +80,6 @@ const DraggableElement: React.FC<IProperties> = (props) => {
         <>
             <div ref={boxRef} 
                         className={createBoxClass()} 
-                        style={createBoxStyle()} 
                         onMouseDown={handleOnMouseDown}>
             </div>
         </>

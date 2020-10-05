@@ -32,10 +32,10 @@ export default class ElementMetaDataCollection {
     private sortList() {
         console.log("sort");
         this.elementsList.sort((a : ElementMetaData, b : ElementMetaData) => {          
-               if (a.currentRect.x === b.currentRect.x) {
-                  return b.currentRect.y - a.currentRect.y ? 1 : -1;
+               if (a.currentRelativeRect.x === b.currentRelativeRect.x) {
+                  return b.currentRelativeRect.y - a.currentRelativeRect.y ? 1 : -1;
                }
-               return a.currentRect.x > b.currentRect.x ? 1 : -1;
+               return a.currentRelativeRect.x > b.currentRelativeRect.x ? 1 : -1;
             });
 
         this.isSorted = true;

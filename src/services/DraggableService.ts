@@ -9,12 +9,9 @@ import ElementMetaDataCollection from "./draggableService/models/ElementMetaData
 export default class DraggableService {
 
     private static instance: DraggableService;
-    private startCursorX: number = 0;
-    private startCursorY: number = 0;
-    private currentlySelectedElement: HTMLDivElement | undefined;
+    private draggingCursorOffsetX: number = 0;
+    private draggingCursorOffsetY: number = 0;
     private currentSelectedElement: ElementMetaData | undefined;
-
-
 
     // pointer to mouse events functions so they can be un-registered
     private eventListenerMouseMove?: (e: MouseEvent) => void | undefined;
@@ -127,14 +124,16 @@ export default class DraggableService {
 
         this.beginTrackingMouse();
 
-        this.startCursorX = x;
-        this.startCursorY = y;
-        this.currentlySelectedElement = this.currentSelectedElement.element;
+        
+        this.draggingCursorOffsetX = x - this.currentSelectedElement.currentRelativeRect.x;
+        this.draggingCursorOffsetY = y - this.currentSelectedElement.currentRelativeRect.y;
+
+        this.setElevation(this.currentSelectedElement,true);
+
+        // this.currentlySelectedElement = this.currentSelectedElement.element;
         this.elementList.listSorted.forEach((box) => {
             
-            this.setCoords(box,box.currentRect.x,box.currentRect.y);
-            console.log(`set coords ${box.currentRect.x} x ${box.currentRect.y}`);
-
+            this.setCoords(box,box.currentRelativeRect.x,box.currentRelativeRect.y);
 
             if (id === box.rectId) {
                 box.callbackModeChanged(EnumBoxMode.absoluteDragging);
@@ -149,16 +148,18 @@ export default class DraggableService {
     public draggingEnd() {
 
         this.endTrackingMouse();
+        
 
         if (this.currentSelectedElement !== undefined) {
             this.currentSelectedElement.callbackDragEnded();
+            this.setElevation(this.currentSelectedElement,false);
         }
         this.elementList.listSorted.forEach((box) => {
             box.callbackModeChanged(EnumBoxMode.relative);
             box.element.style.transform = ``;
         });
 
-        this.currentlySelectedElement = undefined;
+        // this.currentlySelectedElement = undefined;
         this.currentSelectedElement = undefined;
 
         this.layoutDelegate?.sessionEnds();
@@ -170,12 +171,12 @@ export default class DraggableService {
             return;
         }
 
-        let deltaX = x;// - this.startCursorX;
-        let deltaY = y;// - this.startCursorY;
+        let newX = x - this.draggingCursorOffsetX;
+        let newY = y - this.draggingCursorOffsetY;
 
-        this.setCoords(this.currentSelectedElement, deltaX, deltaY);
+        this.setCoords(this.currentSelectedElement, newX, newY);
 
-        var rectangle = this.currentSelectedElement!.currentRect.addCoords(deltaX, deltaY);
+        var rectangle = this.currentSelectedElement!.currentRelativeRect.addCoords(newX, newY);
         this.layoutDelegate?.elementMoved(rectangle);
     }
 
@@ -200,8 +201,8 @@ export default class DraggableService {
     }
 
     private setAnimation = (element : ElementMetaData,  x: number, y: number, elevated: boolean) => {        
-        var s = elevated ? 1.4 : 1;
-        var e = elevated ? 20 : 0;
+        var s = elevated ? 1.2 : 1;
+        var e = elevated ? 10 : 0;
         element.element.style.transform = `translate(${x}px, ${y}px) scale(${s},${s})`;
         element.element.style.boxShadow = `rgba(0, 0, 0, 0.2) 0px ${e}px ${e * 2}px 0px`;
     }
