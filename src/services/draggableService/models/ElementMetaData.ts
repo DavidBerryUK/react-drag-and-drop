@@ -1,4 +1,3 @@
-import { useSpring } from 'framer-motion';
 import { Rectangle } from './Rectangle';
 export type callbackModeChangedType = (mode: EnumBoxMode) => void
 export type callbackDragEndedType = () => void
@@ -12,10 +11,13 @@ export enum EnumBoxMode {
 export default class ElementMetaData {
 
     rectId: string;
-    rect: Rectangle;
+    currentRect: Rectangle;
+    targetRect: Rectangle;
+    // required for dragging
     element: HTMLDivElement;
-    animationXOffset = useSpring(0, { stiffness: 300, damping:50, restDelta: 0.1 })
-    animationYOffset = useSpring(0, { stiffness: 300, damping: 50, restDelta: 0.1 })
+    xRef: React.MutableRefObject<number>;
+    yRef: React.MutableRefObject<number>;
+    elevatedRef: React.MutableRefObject<boolean>;
 
     callbackModeChanged: callbackModeChangedType;
     callbackDragEnded: callbackDragEndedType;
@@ -23,14 +25,35 @@ export default class ElementMetaData {
     constructor(
         rectId: string,
         element: HTMLDivElement,
+        xRef: React.MutableRefObject<number>,
+        yRef: React.MutableRefObject<number>,
+        elevatedRef: React.MutableRefObject<boolean>,
         callbackDragEnded: callbackDragEndedType,
         callbackModeChanged: callbackModeChangedType) {
-        
+
         this.callbackModeChanged = callbackModeChanged;
         this.callbackDragEnded = callbackDragEnded;
         this.rectId = rectId;
         this.element = element;
-        this.rect = Rectangle.fromDomRect(element.getBoundingClientRect());
-    }
+        this.xRef = xRef;
+        this.yRef = yRef;
+        this.elevatedRef = elevatedRef;
+       
+       
+       
+        //this.currentRect = Rectangle.fromDomRect(element.getBoundingClientRect());
+       //console.log(boxRef.current.offsetLeft);
+                //console.log(boxRef.current.offsetTop);
+                //console.log(boxRef.current.clientWidth);
+                //console.log(boxRef.current.clientHeight);
 
+                this.currentRect = new Rectangle(element.offsetLeft,element.offsetTop,element.clientWidth,element.clientHeight);
+
+            // console.log(clientRectangle);
+       
+       
+       
+       
+        this.targetRect = this.currentRect;
+    }
 }
