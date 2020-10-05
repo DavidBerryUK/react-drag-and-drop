@@ -1,11 +1,11 @@
-import  { EnumBoxMode }                          from '../services/draggableService/models/ElementMetaData';
-import { MouseEvent }                           from 'react';
-import { useLayoutEffect }                      from 'react';
-import { useRef }                               from 'react';
-import { useState }                             from 'react';
-import { v4 as uuidv4 }                         from 'uuid';
-import DraggableService                         from '../services/DraggableService';
-import React                                    from 'react';
+import { EnumBoxMode } from '../services/draggableService/models/ElementMetaData';
+import { MouseEvent } from 'react';
+import { useLayoutEffect } from 'react';
+import { useRef } from 'react';
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import DraggableService from '../services/DraggableService';
+import React from 'react';
 
 
 
@@ -15,12 +15,13 @@ interface IProperties {
 
 const DraggableElement: React.FC<IProperties> = (props) => {
 
-    const boxRef = React.useRef<HTMLDivElement>(null);
+    const boxOuterRef = React.useRef<HTMLDivElement>(null);
+    const boxInnerRef = React.useRef<HTMLDivElement>(null);
     const elementIdRef = useRef<string>(uuidv4());
     const mouseIsDownRef = useRef(false);
     const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
     const [modeState, setModeState] = useState(EnumBoxMode.relative);
- 
+
 
     const xRef = useRef(0);
     const yRef = useRef(0);
@@ -36,51 +37,52 @@ const DraggableElement: React.FC<IProperties> = (props) => {
 
         function dragEnded(): void {
             mouseIsDownRef.current = false;
-         
+
         }
 
-        if (boxRef.current !== null) {
+        if (boxOuterRef.current !== null && boxInnerRef.current !== null) {
 
-                draggableServiceRef.current.registerDraggableRect(
-                    elementIdRef.current, 
-                    boxRef.current, 
-                    xRef, 
-                    yRef, 
-                    elevatedRef, 
-                    dragEnded, 
-                    changeMode);
-         
-            
+            draggableServiceRef.current.registerDraggableRect(
+                elementIdRef.current,
+                boxOuterRef.current,
+                boxInnerRef.current,
+                xRef,
+                yRef,
+                elevatedRef,
+                dragEnded,
+                changeMode);
+
+
         }
-    }, [boxRef]);
+    }, [boxOuterRef]);
 
     const handleOnMouseDown = (event: MouseEvent<HTMLDivElement>) => {
         mouseIsDownRef.current = true;
         draggableServiceRef.current.draggingBegin(elementIdRef.current, event.clientX, event.clientY);
-        
+
     }
 
-    
 
 
-    const createBoxClass = () => {
+
+    const createBoxClassOuter = () => {
 
         switch (modeState) {
             case EnumBoxMode.relative:
-                return `box box-style-${props.boxId}  mode-relative`
+                return `box mode-relative`
             case EnumBoxMode.absolute:
-                return `box box-style-${props.boxId}  mode-fixed `
+                return `box mode-fixed `
             case EnumBoxMode.absoluteDragging:
-                return `box box-style-${props.boxId}  mode-fixed-dragging`
+                return `box mode-fixed-dragging`
         }
     }
 
-
     return (
         <>
-            <div ref={boxRef} 
-                        className={createBoxClass()} 
-                        onMouseDown={handleOnMouseDown}>
+            <div ref={boxOuterRef} className={createBoxClassOuter()} onMouseDown={handleOnMouseDown}>
+                <div ref={boxInnerRef} className={`box-style-${props.boxId} box-inner`} >
+
+                </div>
             </div>
         </>
     );

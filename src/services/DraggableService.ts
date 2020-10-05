@@ -86,20 +86,21 @@ export default class DraggableService {
     /**
      * Register a draggable rectangle
      * @param id 
-     * @param element 
+     * @param elementOuter 
      * @param callbackDragEnded 
      * @param callbackModeChanged 
      */
     public registerDraggableRect(
         id: string,
-        element: HTMLDivElement,
+        elementOuter: HTMLDivElement,
+        elementInner: HTMLDivElement,
         xRef: React.MutableRefObject<number>,
         yRef: React.MutableRefObject<number>,
         elevatedRef: React.MutableRefObject<boolean>,
         callbackDragEnded: callbackDragEndedType,
         callbackModeChanged: callbackModeChangedType) {
 
-        var box = new ElementMetaData(id, element, xRef, yRef, elevatedRef, callbackDragEnded, callbackModeChanged);
+        var box = new ElementMetaData(id, elementOuter, elementInner, xRef, yRef, elevatedRef, callbackDragEnded, callbackModeChanged);
 
         // box.toConsole();
         this.elementList.add(box);
@@ -156,7 +157,7 @@ export default class DraggableService {
         }
         this.elementList.listSorted.forEach((box) => {
             box.callbackModeChanged(EnumBoxMode.relative);
-            box.element.style.transform = ``;
+            box.elementOuter.style.transform = ``;
         });
 
         // this.currentlySelectedElement = undefined;
@@ -189,7 +190,6 @@ export default class DraggableService {
 
 
     private setElevation(element : ElementMetaData, elevated: boolean) {
-        
         element.elevatedRef.current = elevated;
         this.setAnimation(element, element.xRef.current, element.yRef.current, elevated);
     }
@@ -203,8 +203,9 @@ export default class DraggableService {
     private setAnimation = (element : ElementMetaData,  x: number, y: number, elevated: boolean) => {        
         var s = elevated ? 1.2 : 1;
         var e = elevated ? 10 : 0;
-        element.element.style.transform = `translate(${x}px, ${y}px) scale(${s},${s})`;
-        element.element.style.boxShadow = `rgba(0, 0, 0, 0.2) 0px ${e}px ${e * 2}px 0px`;
+        element.elementOuter.style.transform = `translate(${x}px, ${y}px) `;
+        element.elementInner.style.transform = `scale(${s},${s})`;
+        element.elementInner.style.boxShadow = `rgba(0, 0, 0, 0.2) 0px ${e}px ${e * 2}px 0px`;
     }
 
 

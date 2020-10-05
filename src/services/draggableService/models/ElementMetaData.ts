@@ -11,10 +11,10 @@ export enum EnumBoxMode {
 export default class ElementMetaData {
 
     rectId: string;
-    // currentAbsoluteRect: Rectangle;
     currentRelativeRect: Rectangle;
     targetRect: Rectangle;
-    element: HTMLDivElement;
+    elementOuter: HTMLDivElement;
+    elementInner: HTMLDivElement;
     xRef: React.MutableRefObject<number>;
     yRef: React.MutableRefObject<number>;
     elevatedRef: React.MutableRefObject<boolean>;
@@ -24,7 +24,8 @@ export default class ElementMetaData {
 
     constructor(
         rectId: string,
-        element: HTMLDivElement,
+        elementOuter: HTMLDivElement,
+        elementInner: HTMLDivElement,
         xRef: React.MutableRefObject<number>,
         yRef: React.MutableRefObject<number>,
         elevatedRef: React.MutableRefObject<boolean>,
@@ -34,12 +35,12 @@ export default class ElementMetaData {
         this.callbackModeChanged = callbackModeChanged;
         this.callbackDragEnded = callbackDragEnded;
         this.rectId = rectId;
-        this.element = element;
+        this.elementOuter = elementOuter;
+        this.elementInner = elementInner;
         this.xRef = xRef;
         this.yRef = yRef;
         this.elevatedRef = elevatedRef;
-        this.currentRelativeRect = new Rectangle(element.offsetLeft,element.offsetTop,element.clientWidth,element.clientHeight);    
-        // this.currentAbsoluteRect = Rectangle.fromDomRect(element.getBoundingClientRect());                 
+        this.currentRelativeRect = new Rectangle(elementOuter.offsetLeft,elementOuter.offsetTop,elementOuter.clientWidth,elementOuter.clientHeight);              
         this.targetRect = this.currentRelativeRect;
     }
 }
