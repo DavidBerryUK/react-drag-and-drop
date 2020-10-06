@@ -1,20 +1,17 @@
 import React from 'react';
 import './App.css';
-import DraggableElement from '../draggableElement/DraggableElement';
-import DemoContainer from '../demoContainer/DemoContainer';
+import DemoContainerWidget from '../components/demoContainer/DemoContainerWidget';
+import { CssBaseline } from '@material-ui/core';
+import ToolbarWidget from '../components/toolbar/ToolbarWidget';
+
 
 function App() {
 
   return (
-    <div className="App">
-      <DemoContainer>
-        <DraggableElement boxId={1} />
-        <DraggableElement boxId={2} />
-        <DraggableElement boxId={3} />
-        <DraggableElement boxId={4} />
-        <DraggableElement boxId={5} />
-        <DraggableElement boxId={6} />
-      </DemoContainer>
+    <div>
+      <CssBaseline />
+      <ToolbarWidget/>
+      <DemoContainerWidget />
     </div>
   );
 }
