@@ -1,33 +1,64 @@
-import { classStyleDefinition }                 from './classStyleDefinition';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import React from 'react';
-import clsx from 'clsx';
+import React, { useState } from 'react';
+import { classStyleDefinition } from './classStyleDefinition';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { MenuProps } from '@material-ui/core';
 
-/**
- * Present a button with available layout modes in a drop down menu style
- */
-const ButtonLayoutModeWidget: React.FC = () => {
 
-  const classStyles = classStyleDefinition();
-  
 
-  const handleClick = () => {
-    console.info(`You clicked `);
+const MinimalSelect: React.FC = () => {
+
+  const [val,setVal] = useState(1);
+
+  const handleChange = (event:any) => {
+    setVal(event.target.value);
+  };
+
+  const minimalSelectClasses = classStyleDefinition();
+
+  const iconComponent = (props:any) => {
+    return (
+      <ExpandMoreIcon className={props.className + " " + minimalSelectClasses.icon}/>
+    )};
+
+  // moves the menu below the select input
+  const menuProps : Partial<MenuProps> = {
+    classes: {
+      paper: minimalSelectClasses.paper,
+      list: minimalSelectClasses.list
+    },
+    anchorOrigin: {
+      vertical: "bottom",
+        horizontal: "left"
+    },
+    transformOrigin: {
+      vertical: "top",
+        horizontal: "left"
+    },
+    getContentAnchorEl: null
   };
 
 
   return (
-      <ButtonGroup size="small" aria-label="small outlined button group" className={classStyles.root}>
-        <Button className={classStyles.button} >Single Column</Button>
-        <Button className={clsx(classStyles.button, classStyles.selected)}>Grid Horizontal</Button>
-        <Button className={classStyles.button}>Grid Vertical</Button>
-        <Button className={classStyles.button}>Columns</Button>
-        <Button className={classStyles.button}>Columns (Compact)</Button>
-        <Button className={classStyles.button}>Rows</Button>
-        <Button className={classStyles.button}>Rows (Compact)</Button>
-      </ButtonGroup>
+    <FormControl>
+      <Select
+        disableUnderline
+        classes={{ root: minimalSelectClasses.select }}
+        MenuProps={menuProps}
+        IconComponent={iconComponent}
+        value={val}
+        onChange={handleChange}
+      >
+        <MenuItem value={0}>Principle</MenuItem>
+        <MenuItem value={1}>Sketch</MenuItem>
+        <MenuItem value={2}>Photoshop</MenuItem>
+        <MenuItem value={3}>Framer</MenuItem>
+      </Select>
+    </FormControl>
   );
 };
 
-export default ButtonLayoutModeWidget;
+
+export default MinimalSelect;
