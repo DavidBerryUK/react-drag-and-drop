@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
 import { classStyleDefinition } from './classStyleDefinition';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { MenuProps } from '@material-ui/core';
-
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import React, { useState } from 'react';
+import Select from '@material-ui/core/Select';
 
 const MinimalSelect: React.FC = () => {
 

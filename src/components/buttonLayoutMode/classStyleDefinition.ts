@@ -5,7 +5,7 @@ export const classStyleDefinition  = makeStyles(() => ({
   select: {
     minWidth: 200,
     background: 'white',
-    color: deepPurple[50],
+    color: deepPurple[600],
     fontWeight:200,
     borderStyle:'none',
     borderWidth: 2,
