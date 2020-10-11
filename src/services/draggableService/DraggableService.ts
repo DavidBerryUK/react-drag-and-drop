@@ -1,10 +1,10 @@
-import { callbackDragEndedType } from "./draggableService/models/ElementMetaData";
-import { callbackModeChangedType } from "./draggableService/models/ElementMetaData";
-import { EnumBoxMode } from "./draggableService/models/ElementMetaData";
-import { ILayoutDelegate } from './layoutServices/interfaces/ILayoutDelegate';
-import ElementMetaData from "./draggableService/models/ElementMetaData";
-import LayoutDelegateNarrative from "./layoutServices/LayoutDelegateNarrative";
-import ElementMetaDataCollection from "./draggableService/models/ElementMetaDataCollection";
+import { callbackDragEndedType } from "./models/ElementMetaData";
+import { callbackModeChangedType } from "./models/ElementMetaData";
+import { EnumBoxMode } from "./models/ElementMetaData";
+import { ILayoutDelegate } from '../layoutServices/interfaces/ILayoutDelegate';
+import ElementMetaData from "./models/ElementMetaData";
+import LayoutDelegateNarrative from "../layoutServices/LayoutDelegateNarrative";
+import ElementMetaDataCollection from "./models/ElementMetaDataCollection";
 
 export default class DraggableService {
 

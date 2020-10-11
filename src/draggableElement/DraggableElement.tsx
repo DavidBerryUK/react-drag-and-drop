@@ -4,7 +4,7 @@ import { useLayoutEffect } from 'react';
 import { useRef } from 'react';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import DraggableService from '../services/DraggableService';
+import DraggableService from '../services/draggableService/DraggableService';
 import React from 'react';
 
 
