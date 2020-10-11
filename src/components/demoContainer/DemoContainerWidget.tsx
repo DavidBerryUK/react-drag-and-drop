@@ -1,8 +1,28 @@
 import './Style.css';
-import React from 'react';
-import DraggableElement from '../../draggableElement/DraggableElement';
+import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
+import { useEffect }                            from 'react';
+import { useState }                             from 'react';
+import DraggableElement                         from '../../draggableElement/DraggableElement';
+import EventBusFactory                          from '../../services/eventbus/EventBusFactory';
+import React                                    from 'react';
 
 const DemoContainerWidget: React.FC = () => {
+
+    console.log("DemoContainerWidget - Render");
+
+    const [layoutEventBus] = useState<IMyLayoutBusEvents>(EventBusFactory.get());
+
+    useEffect(() => {
+        const unsubscribeOnNotificationNewLayout = layoutEventBus.notificationNewLayout.on("", (data) => {
+            console.log(`DemoContainerWidget - notified of new layout:${data.layout.name}`);
+            
+        });
+
+        return function cleanup() {
+            unsubscribeOnNotificationNewLayout();
+        }
+
+    }, [layoutEventBus]);
 
     return (
         <div className='demo-area'>

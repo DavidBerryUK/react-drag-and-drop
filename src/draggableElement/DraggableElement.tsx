@@ -1,18 +1,19 @@
-import { EnumBoxMode } from '../services/draggableService/models/ElementMetaData';
-import { MouseEvent } from 'react';
-import { useLayoutEffect } from 'react';
-import { useRef } from 'react';
-import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import DraggableService from '../services/draggableService/DraggableService';
-import React from 'react';
-
-
+import { EnumBoxMode }                          from '../services/draggableService/models/ElementMetaData';
+import { MouseEvent }                           from 'react';
+import { useLayoutEffect }                      from 'react';
+import { useRef }                               from 'react';
+import { useState }                             from 'react';
+import { v4 as uuidv4 }                         from 'uuid';
+import DraggableService                         from '../services/draggableService/DraggableService';
+import React                                    from 'react';
 
 interface IProperties {
     boxId: number
 }
 
+//
+// Draggable elements self-register with the draggable service
+//
 const DraggableElement: React.FC<IProperties> = (props) => {
 
     const boxOuterRef = React.useRef<HTMLDivElement>(null);
@@ -21,7 +22,6 @@ const DraggableElement: React.FC<IProperties> = (props) => {
     const mouseIsDownRef = useRef(false);
     const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
     const [modeState, setModeState] = useState(EnumBoxMode.relative);
-
 
     const xRef = useRef(0);
     const yRef = useRef(0);

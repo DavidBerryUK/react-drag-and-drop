@@ -1,19 +1,22 @@
-import { AppBar } from '@material-ui/core';
-import { classStyleDefinition } from './classStyleDefinition';
-import { EnumMyIcon } from '../myIcon/MyIcon';
-import { IconButton } from '@material-ui/core';
-import { Toolbar } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
-import { useState } from 'react';
-import ButtonLayoutModeWidget from '../mySelect/MySelect';
-import FeaturedPlayListOutlinedIcon from '@material-ui/icons/FeaturedPlayListOutlined';
-import MyIcon from '../myIcon/MyIcon';
-import MySelectItem from '../mySelect/MySelectItem';
-import React from 'react';
+import { AppBar }                               from '@material-ui/core';
+import { classStyleDefinition }                 from './classStyleDefinition';
+import { EnumMyIcon }                           from '../myIcon/MyIcon';
+import { IconButton }                           from '@material-ui/core';
+import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
+import { Toolbar }                              from '@material-ui/core';
+import { Typography }                           from '@material-ui/core';
+import { useState }                             from 'react';
+import ButtonLayoutModeWidget                   from '../mySelect/MySelect';
+import EventBusFactory                          from '../../services/eventbus/EventBusFactory';
+import FeaturedPlayListOutlinedIcon             from '@material-ui/icons/FeaturedPlayListOutlined';
+import MyIcon                                   from '../myIcon/MyIcon';
+import MySelectItem                             from '../mySelect/MySelectItem';
+import React                                    from 'react';
 
 const ToolbarWidget: React.FC = () => {
 
   const classStyles = classStyleDefinition();
+  const [layoutEventBus] = useState<IMyLayoutBusEvents>(EventBusFactory.get());
 
   const layoutModes: Array<MySelectItem> = [
     new MySelectItem(`${EnumMyIcon.LayoutSingleColumn}`, 'Single Column', <MyIcon icon={EnumMyIcon.LayoutSingleColumn} />),
@@ -27,6 +30,7 @@ const ToolbarWidget: React.FC = () => {
 
   const handleLayoutModeChanged = (item: MySelectItem) => {
     SetLayoutModeState(item);
+    layoutEventBus.notificationNewLayout("",{layout: item});
   }
 
   return (
