@@ -43,17 +43,19 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
 
         console.log(`moved to ${rect.y}`)
 
-        this.elements?.listSorted.forEach((item) => {
+        this.elements?.listSorted.forEach((item, index) => {
 
             if (item.rectId !== element.rectId) {
 
-                console.log(`    ${item.rectId}: y:${item.targetRect.y}`)
+                console.log(`    ${index}: y:${item.targetRect.y}`)
  
-                if ( adjustedForCurrent === false) {
-                    const nextMid = currentY + paddingY;
-                    if ( rect.y < nextMid ) {
+                if ( adjustedForCurrent === false) {                    
+                    const nextMid = currentY + (item.currentRect.height / 2) + ( rect.height / 2);
+                    //console.log(`        ${nextMid} > ${rect.y} = ${ nextMid > rect.y}`);
+                    if ( nextMid > rect.centerY ) {
                         currentY = currentY + rect.height + paddingY;
                         adjustedForCurrent = true;
+                        console.log("        INSERT DRAGGED ITEM");
                     }
                 }
 
