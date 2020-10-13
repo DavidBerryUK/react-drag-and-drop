@@ -10,14 +10,22 @@ export enum EnumBoxMode {
 
 export default class ElementMetaData {
 
-    rectId: string;
-    currentRelativeRect: Rectangle;
-    targetRect: Rectangle;
+    rectId: string;    
     elementOuter: HTMLDivElement;
     elementInner: HTMLDivElement;
     xRef: React.MutableRefObject<number>;
     yRef: React.MutableRefObject<number>;
     elevatedRef: React.MutableRefObject<boolean>;
+
+    /**
+     * Both current and target rectangles are relative to the parent.
+     * - current rect is the rectangle before any transforms
+     * - target rect is the new position calculated by the layout
+     *    algorithm, the rectangle may have begun animating to the new
+     *    position, but the animation isn't yet complete. 
+     */
+    currentRect: Rectangle;
+    targetRect: Rectangle;
 
     callbackModeChanged: callbackModeChangedType;
     callbackDragEnded: callbackDragEndedType;
@@ -40,7 +48,13 @@ export default class ElementMetaData {
         this.xRef = xRef;
         this.yRef = yRef;
         this.elevatedRef = elevatedRef;
-        this.currentRelativeRect = new Rectangle(elementOuter.offsetLeft,elementOuter.offsetTop,elementOuter.clientWidth,elementOuter.clientHeight);              
-        this.targetRect = this.currentRelativeRect;
+        
+        this.currentRect = new Rectangle(
+                elementOuter.offsetLeft,
+                elementOuter.offsetTop,
+                elementOuter.clientWidth,
+                elementOuter.clientHeight);              
+
+        this.targetRect = this.currentRect;
     }
 }

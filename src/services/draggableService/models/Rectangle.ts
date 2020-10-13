@@ -45,6 +45,26 @@ export class Rectangle {
             this.height === r.height;
     }
 
+    clone(): Rectangle {
+        const rectangle = new Rectangle(this.x, this.y, this.width, this.height);
+        return rectangle;
+    }
+
+    cloneAndSetX(x: number): Rectangle {
+        const rectangle = new Rectangle(x, this.y, this.width, this.height);
+        return rectangle;
+    }
+
+    cloneAndSetY(y: number): Rectangle {
+        const rectangle = new Rectangle(this.x, y, this.width, this.height);
+        return rectangle;
+    }
+
+    cloneAndSetXY(x: number, y: number): Rectangle {
+        const rectangle = new Rectangle(x, y, this.width, this.height);
+        return rectangle;
+    }
+
     static equals(a: Rectangle, b: Rectangle): Boolean {
         return a.x === b.x &&
             a.y === b.y &&

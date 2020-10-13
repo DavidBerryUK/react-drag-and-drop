@@ -1,12 +1,11 @@
-import React from 'react';
-import { classStyleDefinition } from './classStyleDefinition';
-import { ReactComponent as LayoutColumnSingle } from "../../svg-icons/layout-column-single.svg";
-import { ReactComponent as LayoutGrid } from "../../svg-icons/layout-grid.svg";
-import { ReactComponent as LayoutColumns } from "../../svg-icons/layout-columns.svg";
-import { ReactComponent as LayoutGridHorizontal } from "../../svg-icons/layout-grid-horizontal.svg";
-import { ReactComponent as LayoutGridVertical } from "../../svg-icons/layout-grid-vertical.svg";
-import { ReactComponent as LayoutRows } from "../../svg-icons/layout-rows.svg";
-
+import React                                        from 'react';
+import { classStyleDefinition }                     from './classStyleDefinition';
+import { ReactComponent as LayoutColumnSingle }     from "../../svg-icons/layout-column-single.svg";
+import { ReactComponent as LayoutGrid }             from "../../svg-icons/layout-grid.svg";
+import { ReactComponent as LayoutColumns }          from "../../svg-icons/layout-columns.svg";
+import { ReactComponent as LayoutGridHorizontal }   from "../../svg-icons/layout-grid-horizontal.svg";
+import { ReactComponent as LayoutGridVertical }     from "../../svg-icons/layout-grid-vertical.svg";
+import { ReactComponent as LayoutRows }             from "../../svg-icons/layout-rows.svg";
 
 export enum EnumMyIcon {
     LayoutColumns,
@@ -33,8 +32,8 @@ const MyIcon: React.FC<IProperties> = (props) => {
 
     const classStyles = classStyleDefinition();
 
-    const getSizeClassName = (size?: EnumMyIconSize) : string => {
-        if ( size === undefined) {
+    const getSizeClassName = (size?: EnumMyIconSize): string => {
+        if (size === undefined) {
             size = EnumMyIconSize.Medium;
         }
 
@@ -47,9 +46,9 @@ const MyIcon: React.FC<IProperties> = (props) => {
                 return classStyles.iconLarge;
         }
     }
-        
+
     const color = props.color || "#000";
-    const sizeClassName = getSizeClassName(props.size);    
+    const sizeClassName = getSizeClassName(props.size);
 
 
     switch (props.icon) {

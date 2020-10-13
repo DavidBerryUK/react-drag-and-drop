@@ -1,6 +1,6 @@
-import { Rectangle } from './../../draggableService/models/Rectangle';
-import ElementMetaData from "../../draggableService/models/ElementMetaData";
-import ElementMetaDataCollection from '../../draggableService/models/ElementMetaDataCollection';
+import { Rectangle }                            from './../../draggableService/models/Rectangle';
+import ElementMetaData                          from "../../draggableService/models/ElementMetaData";
+import ElementMetaDataCollection                from '../../draggableService/models/ElementMetaDataCollection';
 
 export interface ILayoutDelegate {
     /**
@@ -16,5 +16,5 @@ export interface ILayoutDelegate {
     /**
      * user has dragged element to a new position
      */
-    elementMoved:(rect: Rectangle) => void;
+    elementMoved:(element : ElementMetaData, rect: Rectangle) => void;
 }

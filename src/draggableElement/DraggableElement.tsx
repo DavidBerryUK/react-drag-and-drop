@@ -27,9 +27,7 @@ const DraggableElement: React.FC<IProperties> = (props) => {
     const yRef = useRef(0);
     const elevatedRef = useRef(false)
 
-    useLayoutEffect(() => {
-
-        console.log("layout ");
+    useLayoutEffect(() => {        
 
         function changeMode(mode: EnumBoxMode): void {
             setModeState(mode);
@@ -71,7 +69,7 @@ const DraggableElement: React.FC<IProperties> = (props) => {
             case EnumBoxMode.relative:
                 return `box mode-relative`
             case EnumBoxMode.absolute:
-                return `box mode-fixed `
+                return `box mode-fixed box-animating`
             case EnumBoxMode.absoluteDragging:
                 return `box mode-fixed-dragging`
         }

@@ -1,10 +1,11 @@
-import { callbackDragEndedType } from "./models/ElementMetaData";
-import { callbackModeChangedType } from "./models/ElementMetaData";
-import { EnumBoxMode } from "./models/ElementMetaData";
-import { ILayoutDelegate } from '../layoutServices/interfaces/ILayoutDelegate';
-import ElementMetaData from "./models/ElementMetaData";
-import LayoutDelegateNarrative from "../layoutServices/LayoutDelegateNarrative";
-import ElementMetaDataCollection from "./models/ElementMetaDataCollection";
+import { callbackDragEndedType }                from "./models/ElementMetaData";
+import { callbackModeChangedType }              from "./models/ElementMetaData";
+import { EnumBoxMode }                          from "./models/ElementMetaData";
+import { ILayoutDelegate }                      from '../layoutServices/interfaces/ILayoutDelegate';
+import ElementMetaData                          from "./models/ElementMetaData";
+import ElementMetaDataCollection                from "./models/ElementMetaDataCollection";
+import LayoutDelegateNarrative                  from "../layoutServices/LayoutDelegateNarrative";
+import { Rectangle } from "./models/Rectangle";
 
 export default class DraggableService {
 
@@ -125,21 +126,18 @@ export default class DraggableService {
 
         this.beginTrackingMouse();
 
-        
-        this.draggingCursorOffsetX = x - this.currentSelectedElement.currentRelativeRect.x;
-        this.draggingCursorOffsetY = y - this.currentSelectedElement.currentRelativeRect.y;
 
-        this.setElevation(this.currentSelectedElement,true);
+        this.draggingCursorOffsetX = x - this.currentSelectedElement.currentRect.x;
+        this.draggingCursorOffsetY = y - this.currentSelectedElement.currentRect.y;
 
-        // this.currentlySelectedElement = this.currentSelectedElement.element;
+        this.setElevation(this.currentSelectedElement, true);
+
         this.elementList.listSorted.forEach((box) => {
-            
-            this.setCoords(box,box.currentRelativeRect.x,box.currentRelativeRect.y);
-
+            this.setCoords(box, box.currentRect.x, box.currentRect.y);
             if (id === box.rectId) {
                 box.callbackModeChanged(EnumBoxMode.absoluteDragging);
-            } else {                
-                box.callbackModeChanged(EnumBoxMode.absolute);                
+            } else {
+                box.callbackModeChanged(EnumBoxMode.absolute);
             }
         });
 
@@ -149,24 +147,23 @@ export default class DraggableService {
     public draggingEnd() {
 
         this.endTrackingMouse();
-        
 
         if (this.currentSelectedElement !== undefined) {
             this.currentSelectedElement.callbackDragEnded();
-            this.setElevation(this.currentSelectedElement,false);
+            this.setElevation(this.currentSelectedElement, false);
         }
         this.elementList.listSorted.forEach((box) => {
             box.callbackModeChanged(EnumBoxMode.relative);
             box.elementOuter.style.transform = ``;
         });
 
-        // this.currentlySelectedElement = undefined;
         this.currentSelectedElement = undefined;
-
         this.layoutDelegate?.sessionEnds();
     }
 
     public draggingMove(x: number, y: number) {
+
+        console.clear();
 
         if (this.currentSelectedElement === undefined) {
             return;
@@ -175,10 +172,16 @@ export default class DraggableService {
         let newX = x - this.draggingCursorOffsetX;
         let newY = y - this.draggingCursorOffsetY;
 
-        this.setCoords(this.currentSelectedElement, newX, newY);
+        this.setCoords(this.currentSelectedElement, newX, newY);        
+        var rectangle = this.currentSelectedElement!.currentRect.addCoords(newX, newY);
 
-        var rectangle = this.currentSelectedElement!.currentRelativeRect.addCoords(newX, newY);
-        this.layoutDelegate?.elementMoved(rectangle);
+
+        console.log("DRAGGING");
+        console.log(`cursor offset  x:${this.draggingCursorOffsetX}     y:${this.draggingCursorOffsetY}`)
+        console.log(`rect           x:${this.currentSelectedElement!.currentRect.x}     y:${this.currentSelectedElement!.currentRect.y}`)
+        console.log(`new           x:${newX}     y:${newY}`)
+
+        this.layoutDelegate?.elementMoved( this.currentSelectedElement, this.currentSelectedElement.currentRect.cloneAndSetXY(newX,newY));
     }
 
     /**
@@ -189,18 +192,18 @@ export default class DraggableService {
      */
 
 
-    private setElevation(element : ElementMetaData, elevated: boolean) {
+    private setElevation(element: ElementMetaData, elevated: boolean) {
         element.elevatedRef.current = elevated;
         this.setAnimation(element, element.xRef.current, element.yRef.current, elevated);
     }
 
-    private setCoords(element : ElementMetaData, x: number, y: number) {        
+    private setCoords(element: ElementMetaData, x: number, y: number) {
         element.xRef.current = x;
         element.yRef.current = y;
         this.setAnimation(element, x, y, element.elevatedRef.current);
     }
 
-    private setAnimation = (element : ElementMetaData,  x: number, y: number, elevated: boolean) => {        
+    private setAnimation = (element: ElementMetaData, x: number, y: number, elevated: boolean) => {
         var s = elevated ? 1.2 : 1;
         var e = elevated ? 10 : 0;
         element.elementOuter.style.transform = `translate(${x}px, ${y}px) `;
