@@ -1,8 +1,11 @@
 import './Style.css';
+import { EnumEditorMode }                       from '../../services/layoutServices/enums/LayoutEnums';
 import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
 import { useEffect }                            from 'react';
+import { useRef }                               from 'react';
 import { useState }                             from 'react';
 import DraggableElement                         from '../../draggableElement/DraggableElement';
+import DraggableService                         from '../../services/draggableService/DraggableService';
 import EventBusFactory                          from '../../services/eventbus/EventBusFactory';
 import React                                    from 'react';
 
@@ -11,15 +14,21 @@ const DemoContainerWidget: React.FC = () => {
     console.log("DemoContainerWidget - Render");
 
     const [layoutEventBus] = useState<IMyLayoutBusEvents>(EventBusFactory.get());
+    const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
 
     useEffect(() => {
-        const unsubscribeOnNotificationNewLayout = layoutEventBus.notificationLayoutChanged.on("", (data) => {
+        const unsubscribeOnNotificationLayoutChanged = layoutEventBus.notificationLayoutChanged.on("", (data) => {
             console.log(`DemoContainerWidget - notified of new layout:${data.layout.name}`);
             
         });
 
+        const unsubscribeOnNotificationEditorModeChanged = layoutEventBus.notificationEditorModeChanged.on("", (data) => {
+            // draggableServiceRef.current.setEditorMode(EnumEditorMode.LayoutMode);
+        });
+
         return function cleanup() {
-            unsubscribeOnNotificationNewLayout();
+            unsubscribeOnNotificationLayoutChanged();
+            unsubscribeOnNotificationEditorModeChanged();
         }
 
     }, [layoutEventBus]);

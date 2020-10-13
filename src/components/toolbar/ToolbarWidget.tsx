@@ -1,11 +1,12 @@
 import { AppBar }                               from '@material-ui/core';
 import { Box }                                  from '@material-ui/core';
-import { FormControlLabel }                     from '@material-ui/core';
-import { Switch }                               from '@material-ui/core';
 import { classStyleDefinition }                 from './classStyleDefinition';
+import { EnumEditorMode }                       from '../../services/layoutServices/enums/LayoutEnums';
 import { EnumMyIcon }                           from '../myIcon/MyIcon';
+import { FormControlLabel }                     from '@material-ui/core';
 import { IconButton }                           from '@material-ui/core';
 import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
+import { Switch }                               from '@material-ui/core';
 import { Toolbar }                              from '@material-ui/core';
 import { Typography }                           from '@material-ui/core';
 import { useState }                             from 'react';
@@ -15,7 +16,6 @@ import FeaturedPlayListOutlinedIcon             from '@material-ui/icons/Feature
 import MyIcon                                   from '../myIcon/MyIcon';
 import MySelectItem                             from '../mySelect/MySelectItem';
 import React                                    from 'react';
-import { EnumEditorMode } from '../../services/layoutServices/enums/LayoutEnums';
 
 const ToolbarWidget: React.FC = () => {
 
