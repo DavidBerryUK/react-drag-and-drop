@@ -1,4 +1,4 @@
-export enum LayoutEnums {
+export enum EnumsLayout {
     ColumnSingle,
     GridVertical,
     GridHorizontal,
@@ -6,4 +6,9 @@ export enum LayoutEnums {
     RowsEqual,
     ColumnsCompact,
     RowsCompact
+}
+
+export enum EnumEditorMode {
+    ViewMode,
+    LayoutMode    
 }

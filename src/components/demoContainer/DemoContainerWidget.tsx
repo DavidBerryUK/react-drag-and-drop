@@ -13,7 +13,7 @@ const DemoContainerWidget: React.FC = () => {
     const [layoutEventBus] = useState<IMyLayoutBusEvents>(EventBusFactory.get());
 
     useEffect(() => {
-        const unsubscribeOnNotificationNewLayout = layoutEventBus.notificationNewLayout.on("", (data) => {
+        const unsubscribeOnNotificationNewLayout = layoutEventBus.notificationLayoutChanged.on("", (data) => {
             console.log(`DemoContainerWidget - notified of new layout:${data.layout.name}`);
             
         });

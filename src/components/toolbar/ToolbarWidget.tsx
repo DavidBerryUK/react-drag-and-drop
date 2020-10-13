@@ -1,4 +1,7 @@
 import { AppBar }                               from '@material-ui/core';
+import { Box }                                  from '@material-ui/core';
+import { FormControlLabel }                     from '@material-ui/core';
+import { Switch }                               from '@material-ui/core';
 import { classStyleDefinition }                 from './classStyleDefinition';
 import { EnumMyIcon }                           from '../myIcon/MyIcon';
 import { IconButton }                           from '@material-ui/core';
@@ -12,6 +15,7 @@ import FeaturedPlayListOutlinedIcon             from '@material-ui/icons/Feature
 import MyIcon                                   from '../myIcon/MyIcon';
 import MySelectItem                             from '../mySelect/MySelectItem';
 import React                                    from 'react';
+import { EnumEditorMode } from '../../services/layoutServices/enums/LayoutEnums';
 
 const ToolbarWidget: React.FC = () => {
 
@@ -27,10 +31,17 @@ const ToolbarWidget: React.FC = () => {
   ];
 
   const [layoutModeState,SetLayoutModeState ] = useState<MySelectItem>(layoutModes[0]);
+  const [inEditModeState, SetInEditModeState] = useState<EnumEditorMode>(EnumEditorMode.LayoutMode)
 
   const handleLayoutModeChanged = (item: MySelectItem) => {
     SetLayoutModeState(item);
-    layoutEventBus.notificationNewLayout("",{layout: item});
+    layoutEventBus.notificationLayoutChanged("",{layout: item});
+  }
+
+  const handleEditModeChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const mode = checked ? EnumEditorMode.LayoutMode : EnumEditorMode.ViewMode;
+    SetInEditModeState(mode);
+    layoutEventBus.notificationEditorModeChanged({mode: mode});
   }
 
   return (
@@ -45,6 +56,13 @@ const ToolbarWidget: React.FC = () => {
               Dynamic Layout
             </Typography>
           </div>
+          <Box pr={2}>
+          <FormControlLabel 
+        control={<Switch  color="default" value={inEditModeState === EnumEditorMode.LayoutMode} onChange={handleEditModeChange}/>}
+        label="Edit"
+        labelPlacement="start"
+      />
+      </Box>
           <div className={classStyles.right}>
             <ButtonLayoutModeWidget selectedItem={layoutModeState} items={layoutModes} onSelected={handleLayoutModeChanged}  />
           </div>
