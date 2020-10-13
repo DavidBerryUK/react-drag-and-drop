@@ -163,8 +163,6 @@ export default class DraggableService {
 
     public draggingMove(x: number, y: number) {
 
-        console.clear();
-
         if (this.currentSelectedElement === undefined) {
             return;
         }
@@ -174,12 +172,6 @@ export default class DraggableService {
 
         this.setCoords(this.currentSelectedElement, newX, newY);        
         var rectangle = this.currentSelectedElement!.currentRect.addCoords(newX, newY);
-
-
-        console.log("DRAGGING");
-        console.log(`cursor offset  x:${this.draggingCursorOffsetX}     y:${this.draggingCursorOffsetY}`)
-        console.log(`rect           x:${this.currentSelectedElement!.currentRect.x}     y:${this.currentSelectedElement!.currentRect.y}`)
-        console.log(`new           x:${newX}     y:${newY}`)
 
         this.layoutDelegate?.elementMoved( this.currentSelectedElement, this.currentSelectedElement.currentRect.cloneAndSetXY(newX,newY));
     }

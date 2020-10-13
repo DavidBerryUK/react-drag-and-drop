@@ -9,8 +9,7 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
     private selectedElement: ElementMetaData | undefined;
     private minY: number = 0;
 
-    sessionBegins(selectedElement: ElementMetaData, elements: ElementMetaDataCollection) {
-        console.log("LayoutDelegateNarrative: Session Begins");
+    sessionBegins(selectedElement: ElementMetaData, elements: ElementMetaDataCollection) {        
         this.elements = elements;
         this.selectedElement = selectedElement;
 
@@ -21,8 +20,7 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
         }
     }
 
-    sessionEnds() {
-        console.log("LayoutDelegateNarrative: Session Ends");
+    sessionEnds() {        
         this.elements = undefined;
         this.selectedElement = undefined;
     }
@@ -39,23 +37,18 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
         }
 
         let adjustedForCurrent = false;
-        
-
-        console.log(`moved to ${rect.y}`)
+                
 
         this.elements?.listSorted.forEach((item, index) => {
 
-            if (item.rectId !== element.rectId) {
-
-                console.log(`    ${index}: y:${item.targetRect.y}`)
+            if (item.rectId !== element.rectId) {                
  
                 if ( adjustedForCurrent === false) {                    
                     const nextMid = currentY + (item.currentRect.height / 2) + ( rect.height / 2);
-                    //console.log(`        ${nextMid} > ${rect.y} = ${ nextMid > rect.y}`);
+                    
                     if ( nextMid > rect.centerY ) {
                         currentY = currentY + rect.height + paddingY;
-                        adjustedForCurrent = true;
-                        console.log("        INSERT DRAGGED ITEM");
+                        adjustedForCurrent = true;                        
                     }
                 }
 
@@ -66,8 +59,7 @@ export default class LayoutDelegateNarrative implements ILayoutDelegate {
                 currentY = currentY + item.currentRect.height + paddingY;
 
             }
-        });
-        console.log("LayoutDelegateNarrative: Moved");
+        });        
     }
 
 }
