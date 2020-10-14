@@ -5,7 +5,6 @@ import { ILayoutDelegate }                      from '../layoutServices/interfac
 import ElementMetaData                          from "./models/ElementMetaData";
 import ElementMetaDataCollection                from "./models/ElementMetaDataCollection";
 import LayoutDelegateNarrative                  from "../layoutServices/LayoutDelegateNarrative";
-import { Rectangle } from "./models/Rectangle";
 
 export default class DraggableService {
 
@@ -171,7 +170,7 @@ export default class DraggableService {
         let newY = y - this.draggingCursorOffsetY;
 
         this.setCoords(this.currentSelectedElement, newX, newY);        
-        var rectangle = this.currentSelectedElement!.currentRect.addCoords(newX, newY);
+        //var rectangle = this.currentSelectedElement!.currentRect.addCoords(newX, newY);
 
         this.layoutDelegate?.elementMoved( this.currentSelectedElement, this.currentSelectedElement.currentRect.cloneAndSetXY(newX,newY));
     }

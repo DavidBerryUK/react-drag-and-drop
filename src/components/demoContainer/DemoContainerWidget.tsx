@@ -1,11 +1,10 @@
 import './Style.css';
-import { EnumEditorMode }                       from '../../services/layoutServices/enums/LayoutEnums';
 import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
 import { useEffect }                            from 'react';
-import { useRef }                               from 'react';
+// import { useRef }                               from 'react';
 import { useState }                             from 'react';
 import DraggableElement                         from '../../draggableElement/DraggableElement';
-import DraggableService                         from '../../services/draggableService/DraggableService';
+// import DraggableService                         from '../../services/draggableService/DraggableService';
 import EventBusFactory                          from '../../services/eventbus/EventBusFactory';
 import React                                    from 'react';
 
@@ -14,7 +13,7 @@ const DemoContainerWidget: React.FC = () => {
     console.log("DemoContainerWidget - Render");
 
     const [layoutEventBus] = useState<IMyLayoutBusEvents>(EventBusFactory.get());
-    const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
+    // const draggableServiceRef = useRef<DraggableService>(DraggableService.getInstance());
 
     useEffect(() => {
         const unsubscribeOnNotificationLayoutChanged = layoutEventBus.notificationLayoutChanged.on("", (data) => {
