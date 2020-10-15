@@ -1,5 +1,4 @@
 import './Style.css';
-import { EnumEditorMode }                       from '../../services/layoutServices/enums/LayoutEnums';
 import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
 import { useEffect }                            from 'react';
 import { useRef }                               from 'react';
