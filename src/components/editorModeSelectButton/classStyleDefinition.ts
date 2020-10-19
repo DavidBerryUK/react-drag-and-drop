@@ -4,12 +4,13 @@ import { makeStyles }                           from '@material-ui/core/styles';
 export const classStyleDefinition = makeStyles(() => ({
 
     root: {
-        backgroundColor:'#fff',
-        borderRadius: 13,        
+        backgroundColor:'none',
+        borderRadius: 12,        
+        border:'none',
         "& button" : {
-            borderRadius:12,
-            
+            borderRadius:12,            
             color: deepPurple[600],            
+            backgroundColor:deepPurple[50]
         },
         "& button:hover": {
             background: deepPurple[100]

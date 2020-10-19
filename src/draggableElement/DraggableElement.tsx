@@ -60,11 +60,7 @@ const DraggableElement: React.FC<IProperties> = (props) => {
 
     }
 
-
-
-
     const createBoxClassOuter = () => {
-
         switch (modeState) {
             case EnumBoxMode.relative:
                 return `box mode-relative`
