@@ -1,10 +1,8 @@
 import './Style.css';
 import { IMyLayoutBusEvents }                   from '../../services/eventbus/EventBusFactory';
 import { useEffect }                            from 'react';
-// import { useRef }                               from 'react';
 import { useState }                             from 'react';
 import DraggableElement                         from '../../draggableElement/DraggableElement';
-// import DraggableService                         from '../../services/draggableService/DraggableService';
 import EventBusFactory                          from '../../services/eventbus/EventBusFactory';
 import React                                    from 'react';
 
